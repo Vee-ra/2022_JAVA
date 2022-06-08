@@ -1,4 +1,4 @@
-package com.kotak.util;
+package com.BSIT.Connection;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -9,91 +9,106 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CRUD {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+
+		String name = "Veera";
+
+		List<Map<String, Object>> mlist = selectQuery(name);
+
+		System.out.println(mlist);
+
+//		insertQuery(url, username, password);
+	}
+
+	public static List<Map<String, Object>> selectQuery(String name) {
 
 		String url = "jdbc:oracle:thin:@192.168.1.40:1521:orcl", username = "ORCLTEST", password = "ORCLTEST";
 
-		dbConnection(url, username, password);
-
-		int id = 3;
-//		CRUD crud = new CRUD();
-		selectQuery(id, url, username, password);
-	}
-
-	public void insertValues() {
-
-//		String iQuery = null;
-//		try {
-//			
-//		}
-//		
-
-	}
-
-	public static List<HashMap<String, Object>> selectQuery(int id, String url, String username, String password) {
-
-		HashMap<String, Object> map = new HashMap<String, Object>();
-
-		List<HashMap<String, Object>> mapList = new ArrayList<HashMap<String, Object>>();
-
+		List<Map<String, Object>> mapList = new ArrayList<>();
 		try {
-			String sQuery = "SELECT * FROM cruddemo where id = ?";
+			String sQuery = "SELECT * FROM cruddemo1 where name =?";
 
-			Connection conn = CRUD.dbConnection(url, username, password);
+			Connection connection = CRUD.dbConnection(url, username, password);
 
-			PreparedStatement pst = conn.prepareStatement(sQuery);
-			pst.setInt(1, id);
+			PreparedStatement pst = connection.prepareStatement(sQuery);
+			pst.setString(1, name);
 			ResultSet rs = pst.executeQuery();
 
-			System.out.println("ERESULT SET: " + rs);
+			// System.out.println("Resultset :" + rs);
 
 			while (rs.next()) {
 				Integer idey = rs.getInt("ID");
-				String name = rs.getString("NAME");
+				String name1 = rs.getString("NAME");
 				BigDecimal age = rs.getBigDecimal("AGE");
 				String depart = rs.getString("DEPARTMENT");
-				String lang = rs.getString("LANGAUAGE");
+				String language = rs.getString("LANGUAGE");
 				BigDecimal marks = rs.getBigDecimal("MARKS");
 
+				 Map<String, Object> map = new HashMap<>();
 				map.put("ID", idey);
-				map.put("NAME", name);
+				map.put("NAME", name1);
 				map.put("AGE", age);
 				map.put("DEPARTMENT", depart);
-				map.put("LANGUAGE", lang);
+				map.put("LANGUAGE", language);
 				map.put("MARKS", marks);
 
 				mapList.add(map);
 			}
 
-			System.out.println(mapList);
 		} catch (Exception e) {
-			System.err.println("Exception Occured: " + e.getMessage());
-
+			System.err.println("Error message" + e.getMessage());
 		}
 		return mapList;
 	}
 
+//	public static void insertQuery(String url,String username,String password) {
+//		
+//		try {
+//			
+//			String sql = "insert into cruddemo1(name,age,department,language,marks) values(?,?,?,?,?)";
+//			
+//			Connection connection = CRUD.dbConnection(url, username, password);
+//			
+//			PreparedStatement pst = connection.prepareStatement(sql);
+////			pst.setInt(1, 03);
+//			pst.setString(1, "Veera");
+//			pst.setInt(2,25);
+//			pst.setString(3, "Kotak");
+//			pst.setString(4, "Tamil");
+//			pst.setInt(5, 65);
+//			
+//			int rows= pst.executeUpdate();
+//			
+//			if(rows>0) {
+//				System.out.println("A row has been inserted successfully");
+//			}
+//			
+//			System.out.println(pst);
+//			
+//		} catch(Exception e) {
+//			System.err.println(e.getMessage());
+//		}
+//	}
+//	
 	public static Connection dbConnection(String url, String username, String password) {
 
-		Connection conn = null;
+		Connection connection = null;
 		try {
-			conn = DriverManager.getConnection(url, username, password);
+			connection = DriverManager.getConnection(url, username, password);
 
-			if (conn != null) {
-				System.out.println("CONNECTION ESTABLISHED: " + conn);
+			if (connection != null) {
+				System.out.println("connection done");
 			} else {
-				System.out.println("CONNECTION  NOT ESTABLISHED: " + conn);
+				System.out.println("CONNECTIOn fiald");
 			}
 		} catch (SQLException e) {
-
-			System.out.println("SQLEXCEPTION OCCURED: " + e.getMessage());
+			System.out.println("SQLException Occured: " + e.getMessage());
 			e.printStackTrace();
 		}
-		return conn;
+		return connection;
 	}
-
 }
